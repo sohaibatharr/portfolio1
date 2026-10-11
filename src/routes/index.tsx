@@ -192,7 +192,11 @@ function Index() {
       </nav>
 
       <header className="tp-hero">
-        <h1 className="tp-h">Thumbnails that convert</h1>
+        <h1 className="tp-h">
+          <span className="tp-h-line">Thumbnails</span>
+          <span className="tp-h-line">that get</span>
+          <span className="tp-h-line">Clicks</span>
+        </h1>
         <p className="tp-p">I don't just make pretty thumbnails, my thumbnails are well optimised to get clicked, which spark curiosity and urge the viewer to click on them</p>
         <div className="tp-btns">
           <a href="#featured-work" className="tp-mono tp-primary">My Work</a>
