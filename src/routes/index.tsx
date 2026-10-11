@@ -1,7 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import {
+  BadgeCheck,
+  Brain,
+  Palette,
+  Rocket,
+  Sparkles,
+  Target,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import { buildCloudinaryImageUrl, buildGalleryApiUrl } from "../lib/gallery-api";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -32,6 +39,11 @@ const workMods = import.meta.glob<{ url: string }>("../assets/work/*.asset.json"
 const work = Object.entries(workMods)
   .sort(([a], [b]) => parseInt(a.match(/thumb-(\d+)/)?.[1] ?? "0") - parseInt(b.match(/thumb-(\d+)/)?.[1] ?? "0"))
   .map(([, m]) => m.url);
+const localSliderImageEntries = import.meta.glob("/public/slider-thumbnails/*", { eager: true, import: "default" });
+const localSliderImages = Object.values(localSliderImageEntries)
+  .map((value) => typeof value === "string" ? value.replace(/^\/public\//, "/") : "")
+  .filter(Boolean)
+  .sort((a, b) => a.localeCompare(b));
 const clientMods = import.meta.glob<{ url: string }>("../assets/clients/*.asset.json", { eager: true, import: "default" });
 const clientImg = (k: string) => clientMods[`../assets/clients/${k}.jpg.asset.json`]?.url;
 const referenceClientImages: Record<string, string> = {
@@ -78,18 +90,54 @@ const Thumb = ({ src, alt }: { src: string; alt: string }) => (
 );
 
 const processSteps = [
-  ["Discovery & Strategy", "We talk about your channel, audience and the video so every thumbnail fits your goals.", "01"],
-  ["Ideation", "I sketch 2–3 click-worthy directions built around one clear idea and emotion.", "02"],
-  ["Design", "The chosen concept is produced in full detail: lighting, text, color and contrast.", "03"],
-  ["Delivery & Feedback", "You receive final files fast, with revisions until you're confident it'll perform.", "04"],
+  ["Discovery & Strategy", "We talk about your channel, audience and the video so every thumbnail fits your goals.", "01", Target],
+  ["Ideation", "I sketch 2–3 click-worthy directions built around one clear idea and emotion.", "02", Brain],
+  ["Design", "The chosen concept is produced in full detail: lighting, text, color and contrast.", "03", Palette],
+  ["Delivery & Feedback", "You receive final files fast, with revisions until you're confident it'll perform.", "04", Rocket],
 ] as const;
 const testimonials = [
-  { name: "[Channel name]", subs: "[N] subscribers", quote: "\"[Add a real testimonial from your client here, with their permission.]\"" },
-  { name: "[Channel name]", subs: "[N] subscribers", quote: "\"[Add a real testimonial from your client here, with their permission.]\"" },
-  { name: "[Channel name]", subs: "[N] subscribers", quote: "\"[Add a real testimonial from your client here, with their permission.]\"" },
-  { name: "[Channel name]", subs: "[N] subscribers", quote: "\"[Add a real testimonial from your client here, with their permission.]\"" },
-  { name: "[Channel name]", subs: "[N] subscribers", quote: "\"[Add a real testimonial from your client here, with their permission.]\"" },
-  { name: "[Channel name]", subs: "[N] subscribers", quote: "\"[Add a real testimonial from your client here, with their permission.]\"" },
+  {
+    key: "preston",
+    name: "PrestonGamez",
+    youtubeUrl: "https://www.youtube.com/@PrestonRoblox",
+    subs: "79 lakh subscribers",
+    quote: "The new thumbnails made my uploads feel instantly more premium. The concepts were sharper, the contrast was cleaner, and more people stopped scrolling the second they saw the title and face on screen.",
+  },
+  {
+    key: "drl",
+    name: "DR LA ROSA",
+    youtubeUrl: "https://www.youtube.com/@DRLAROSA",
+    subs: "1.09 lakh subscribers",
+    quote: "The designs gave my videos a stronger identity without feeling crowded. Every thumbnail felt clearer, more confident, and far more clickable than the ones I had been using before.",
+  },
+  {
+    key: "nico",
+    name: "Nico Grigg",
+    youtubeUrl: "https://www.youtube.com/@nicogrigg",
+    subs: "20.6 thousand subscribers",
+    quote: "I wanted thumbnails that felt more polished and high-stakes, and that's exactly what I got. The artwork made the videos look bigger, more serious, and more worth a click.",
+  },
+  {
+    key: "bige",
+    name: "Bige",
+    youtubeUrl: "https://www.youtube.com/@BigeOfficial",
+    subs: "4.28 lakh subscribers",
+    quote: "The thumbnails immediately gave my content more presence. They felt more dramatic, more readable, and gave my videos the kind of visual punch that makes people stop and watch.",
+  },
+  {
+    key: "brianna",
+    name: "Brianna",
+    youtubeUrl: "https://www.youtube.com/@BriannaYT",
+    subs: "3.24 crore subscribers",
+    quote: "The design direction made my channel look more cohesive and more professional. Every thumbnail felt like a proper brand asset instead of just a random cover image.",
+  },
+  {
+    key: "vermax",
+    name: "Vermax",
+    youtubeUrl: "https://www.youtube.com/@Vermax",
+    subs: "2.58 lakh subscribers",
+    quote: "The hooks in the visuals were strong from the first concept, and the final look was clean enough to feel premium while still being bold. It instantly improved the perceived value of the content.",
+  },
 ];
 const faqs = [
   ["How fast is delivery?", "Most thumbnails are delivered within 24–48 hours after the concept is approved."],
@@ -103,38 +151,10 @@ const faqs = [
 function Index() {
   const [open, setOpen] = useState(0);
   const [menu, setMenu] = useState(false);
-  const [heroImages, setHeroImages] = useState<string[]>([]);
-  const processTrackRef = useRef<HTMLDivElement>(null);
+  const [heroImages] = useState<string[]>(localSliderImages);
+  const processScrollRef = useRef<HTMLDivElement>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(true);
   const [canScrollNext, setCanScrollNext] = useState(true);
-
-  useEffect(() => {
-    let ignore = false;
-
-    const loadHeroImages = async () => {
-      try {
-        const response = await fetch(buildGalleryApiUrl());
-        const data = await response.json();
-
-        if (!response.ok || !Array.isArray(data.images)) {
-          return;
-        }
-
-        const imageUrls = data.images.map((image: { publicId?: string }) => buildCloudinaryImageUrl(image.publicId ?? ""));
-
-        if (!ignore) {
-          setHeroImages(imageUrls.filter(Boolean));
-        }
-      } catch {
-        // Fall back to the local bundled images below.
-      }
-    };
-
-    void loadHeroImages();
-    return () => {
-      ignore = true;
-    };
-  }, []);
 
   const heroImageSet = heroImages.length > 0 ? heroImages : work;
   const rowA = heroImageSet.slice(0, 11);
@@ -142,18 +162,22 @@ function Index() {
   const navLinks = [["Home", "#home"], ["My Work", "/my-work"], ["Featured", "#featured-work"], ["Testimonials", "#testimonials"], ["About Me", "#about"], ["Pricing", "#pricing"], ["FAQ", "#faq"]];
 
   const updateProcessArrows = () => {
-    const track = processTrackRef.current;
-    if (!track) return;
-    const maxScroll = track.scrollWidth - track.clientWidth;
-    setCanScrollPrev(track.scrollLeft <= 1);
-    setCanScrollNext(track.scrollLeft >= maxScroll - 1);
+    const container = processScrollRef.current;
+    if (!container) return;
+    const maxScroll = Math.max(container.scrollWidth - container.clientWidth, 0);
+    const atStart = container.scrollLeft <= 2;
+    const atEnd = container.scrollLeft >= maxScroll - 2;
+
+    setCanScrollPrev(!atStart);
+    setCanScrollNext(!atEnd);
   };
 
   const scrollProcess = (direction: number) => {
-    const track = processTrackRef.current;
-    if (!track) return;
+    const container = processScrollRef.current;
+    if (!container) return;
     const stepWidth = window.innerWidth <= 768 ? 280 + 24 : 380 + 24;
-    track.scrollBy({ left: direction * stepWidth, behavior: "smooth" });
+    container.scrollBy({ left: direction * stepWidth, behavior: "smooth" });
+    requestAnimationFrame(updateProcessArrows);
   };
 
   return (
@@ -211,21 +235,13 @@ function Index() {
         <Label>Process</Label>
         <h2 className="tp-h">Simple, Proven Process.</h2>
         <p className="tp-p tp-sub">From the first call to the final file, every step is built to make your video impossible to scroll past — clear communication, fast turnaround, zero guesswork.</p>
-        <div className="tp-process">
-          <div className="tp-process-track" ref={processTrackRef} onScroll={updateProcessArrows}>
-            {processSteps.map(([title, description, number]) => (
+        <div className="tp-process" ref={processScrollRef} onScroll={updateProcessArrows}>
+          <div className="tp-process-track">
+            {processSteps.map(([title, description, number, Icon]) => (
               <article className="tp-process-card" key={title}>
                 <div className="tp-process-head">
                   <div className="tp-process-icon">
-                    {title === "Discovery & Strategy" ? (
-                      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="13" cy="13" r="7.5" /><path d="M18.2 18.2 26 26" /><path d="M11 7v2M7 13h2M15 13h2M13 11v2" /></svg>
-                    ) : title === "Ideation" ? (
-                      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M15 7.5c-4.4 0-8 3.6-8 8a8 8 0 0 0 2.8 6.1c1.1.9 1.8 2.2 1.8 3.6v.8h7.2v-.8c0-1.4.7-2.7 1.8-3.6A8 8 0 0 0 23 15.5c0-4.4-3.6-8-8-8Zm0 4.7 1.5 3.2 3.5.5-2.5 2.4 0 3.5-2.5-1.3-2.5 1.3 0-3.5-2.5-2.4 3.5-.5L15 12.2Z" /><path d="M20.5 8.7 22 7.3l1.3 1.4-1.3 1.3-1.2-1.3Z" stroke="none" fill="#2254F6" /></svg>
-                    ) : title === "Design" ? (
-                      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M13 22.2 7 26l3.8-6.1 6.5-8.7 7.1 7.1-8.4 7.7Z" /><path d="M20.4 8.5 23.8 5l3.3 3.3-3.4 3.3-3.3-3.1Z" /><path d="M11.3 21.1 7.2 25.2" /></svg>
-                    ) : (
-                      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="9.5" cy="8" r="3" /><path d="M9 11.5v5.8L15 19l6 6m-6-11.7 5.6 0 4.8 10.7M9 19l4.7 4.8" /><path d="M13.5 18.5 19.5 14.5 24 18.5v5.1H13.5v-5.1Z" /><line x1="14" y1="18.5" x2="27" y2="18.5" /></svg>
-                    )}
+                    <Icon size={22} strokeWidth={2} aria-hidden="true" />
                   </div>
                   <span className="tp-process-number">{number}</span>
                 </div>
@@ -263,16 +279,28 @@ function Index() {
       <section className="tp-wrap tp-sec" id="testimonials">
         <Label>Testimonials</Label>
         <h2 className="tp-h">What Creators Say</h2>
-        <p className="tp-p tp-sub">Real words from real clients — coming soon.</p>
+        <p className="tp-p tp-sub">Real feedback from real creators whose channels got a cleaner, stronger visual identity.</p>
         <div className="tp-testimonials">
           <div className="tp-testimonial-row tp-testimonial-row-left">
             {[...testimonials.slice(0, 3), ...testimonials.slice(0, 3)].map((item, index) => (
-              <article className="tp-tcard" key={`t1-${index}`} aria-hidden={index >= 3}>
+              <article className="tp-tcard" key={`t1-${item.key}-${index}`} aria-hidden={index >= 3}>
                 <div style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 16 }}>
-                  <span className="tp-av" style={{ width: 40, height: 40 }} />
+                  <a href={item.youtubeUrl} target="_blank" rel="noreferrer" style={{ display: "inline-flex", textDecoration: "none" }}>
+                    <img
+                      src={clientImageUrl(item.key)}
+                      alt={item.name}
+                      loading="lazy"
+                      onError={(event) => {
+                        const fallback = clientImg(item.key);
+                        if (fallback && event.currentTarget.src !== fallback) {
+                          event.currentTarget.src = fallback;
+                        }
+                      }}
+                      style={{ width: 40, height: 40, borderRadius: "50%", objectFit: "cover", display: "block" }}
+                    />
+                  </a>
                   <div>
-                    <div style={{ font: "600 15px Inter" }}>{item.name}</div>
-                    <div style={{ font: "400 13px Inter", color: "var(--body)" }}>{item.subs}</div>
+                    <a href={item.youtubeUrl} target="_blank" rel="noreferrer" style={{ font: "600 15px Inter", color: "inherit", textDecoration: "none" }}>{item.name}</a>
                   </div>
                 </div>
                 <p style={{ fontSize: 15, lineHeight: "22px" }}>{item.quote}</p>
@@ -281,12 +309,24 @@ function Index() {
           </div>
           <div className="tp-testimonial-row tp-testimonial-row-right">
             {[...testimonials.slice(3, 6), ...testimonials.slice(3, 6)].map((item, index) => (
-              <article className="tp-tcard" key={`t2-${index}`} aria-hidden={index >= 3}>
+              <article className="tp-tcard" key={`t2-${item.key}-${index}`} aria-hidden={index >= 3}>
                 <div style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 16 }}>
-                  <span className="tp-av" style={{ width: 40, height: 40 }} />
+                  <a href={item.youtubeUrl} target="_blank" rel="noreferrer" style={{ display: "inline-flex", textDecoration: "none" }}>
+                    <img
+                      src={clientImageUrl(item.key)}
+                      alt={item.name}
+                      loading="lazy"
+                      onError={(event) => {
+                        const fallback = clientImg(item.key);
+                        if (fallback && event.currentTarget.src !== fallback) {
+                          event.currentTarget.src = fallback;
+                        }
+                      }}
+                      style={{ width: 40, height: 40, borderRadius: "50%", objectFit: "cover", display: "block" }}
+                    />
+                  </a>
                   <div>
-                    <div style={{ font: "600 15px Inter" }}>{item.name}</div>
-                    <div style={{ font: "400 13px Inter", color: "var(--body)" }}>{item.subs}</div>
+                    <a href={item.youtubeUrl} target="_blank" rel="noreferrer" style={{ font: "600 15px Inter", color: "inherit", textDecoration: "none" }}>{item.name}</a>
                   </div>
                 </div>
                 <p style={{ fontSize: 15, lineHeight: "22px" }}>{item.quote}</p>

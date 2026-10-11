@@ -70,8 +70,7 @@ export function Gallery() {
   return (
     <div className="tp-cloudinary-gallery">
       <div className="tp-gallery-header">
-        <div className="tp-label">My Work</div>
-        <h2 className="tp-h">Cloudinary gallery</h2>
+        <div className="tp-label tp-gallery-label">My Work</div>
       </div>
 
       {error ? (
