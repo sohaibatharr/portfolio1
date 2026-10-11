@@ -34,6 +34,24 @@ const work = Object.entries(workMods)
   .map(([, m]) => m.url);
 const clientMods = import.meta.glob<{ url: string }>("../assets/clients/*.asset.json", { eager: true, import: "default" });
 const clientImg = (k: string) => clientMods[`../assets/clients/${k}.jpg.asset.json`]?.url;
+const referenceClientImages: Record<string, string> = {
+  preston: "https://sohaiblandingpage.vercel.app/images/clients/preston.jpg",
+  surf: "https://sohaiblandingpage.vercel.app/images/clients/surf.jpg",
+  zachhfinance: "https://sohaiblandingpage.vercel.app/images/clients/zachhfinance.jpg",
+  suzie: "https://sohaiblandingpage.vercel.app/images/clients/suzie.jpg",
+  drl: "https://sohaiblandingpage.vercel.app/images/clients/drl.jpg",
+  martin: "https://sohaiblandingpage.vercel.app/images/clients/martin.jpg",
+  fancy: "https://sohaiblandingpage.vercel.app/images/clients/fancy.jpg",
+  kevin: "https://sohaiblandingpage.vercel.app/images/clients/kevin.jpg",
+  benji: "https://sohaiblandingpage.vercel.app/images/clients/benji.jpg",
+  nico: "https://sohaiblandingpage.vercel.app/images/clients/nico.jpg",
+  bige: "https://sohaiblandingpage.vercel.app/images/clients/bige.jpg",
+  brianna: "https://sohaiblandingpage.vercel.app/images/clients/brianna.jpg",
+  howtoai: "https://sohaiblandingpage.vercel.app/images/clients/howtoai.jpg",
+  vermax: "https://sohaiblandingpage.vercel.app/images/clients/vermax.jpg",
+  nhg: "https://sohaiblandingpage.vercel.app/images/clients/nhg.jpg",
+  mrsinn: "https://sohaiblandingpage.vercel.app/images/clients/mrsinn.jpg",
+};
 const clients: [string, string, string][] = [
   ["preston", "PrestonGamez", "https://www.youtube.com/@PrestonRoblox/videos"],
   ["surf", "Surfs Up", "https://www.youtube.com/@TheSurfsUp/videos"],
@@ -52,6 +70,7 @@ const clients: [string, string, string][] = [
   ["nhg", "NHG Benji", "https://www.youtube.com/@NoHandGaming/featured"],
   ["mrsinn", "Mr. Sinn", "https://www.youtube.com/@MrSinn"],
 ];
+const clientImageUrl = (k: string) => referenceClientImages[k] ?? clientImg(k);
 const Thumb = ({ src, alt }: { src: string; alt: string }) => (
   <div className="tp-thumb" style={{ padding: 0, overflow: "hidden" }}>
     <img src={src} alt={alt} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
@@ -169,7 +188,18 @@ function Index() {
           <div className="tp-row" style={{ gap: 36 }}>
             {[...clients, ...clients].map(([k, name, url], i) => (
               <a key={i} href={url} target="_blank" rel="noreferrer" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, width: 110, flex: "none", color: "inherit", textDecoration: "none" }}>
-                <img src={clientImg(k)} alt={name} loading="lazy" style={{ width: 80, height: 80, borderRadius: "50%", objectFit: "cover" }} />
+                <img
+                  src={clientImageUrl(k)}
+                  alt={name}
+                  loading="lazy"
+                  onError={(event) => {
+                    const fallback = clientImg(k);
+                    if (fallback && event.currentTarget.src !== fallback) {
+                      event.currentTarget.src = fallback;
+                    }
+                  }}
+                  style={{ width: 80, height: 80, borderRadius: "50%", objectFit: "cover" }}
+                />
                 <span style={{ fontSize: 13, textAlign: "center" }}>{name}</span>
               </a>
             ))}
