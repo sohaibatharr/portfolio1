@@ -1629,33 +1629,6 @@
   }
 }
 
-@media (max-width: 767px) and (max-height: 700px) {
-  .tp-hero {
-    padding-top: clamp(64px, 11vh, 76px);
-    padding-bottom: 20px;
-  }
-
-  .tp-hero-proof {
-    margin-bottom: 12px;
-  }
-
-  .tp-hero .tp-h {
-    font-size: clamp(2.75rem, 12.5vw, 4rem);
-  }
-
-  .tp-client-collage {
-    margin-top: 16px;
-  }
-
-  .tp-btns {
-    margin-top: 20px;
-  }
-
-  .tp-marquee {
-    margin-top: 16px;
-  }
-}
-
 @media (max-width: 900px) {
   .tp-links:not(.open) {
     left: 70px;
