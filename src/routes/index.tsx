@@ -8,6 +8,7 @@ import {
   Target,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { ClientCollage } from "../components/ClientCollage";
 
 
 export const Route = createFileRoute("/")({
@@ -24,12 +25,12 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const Spark = ({ c = "#2254F5", s = 8 }: { c?: string; s?: number }) => (
+const Spark = ({ c = "var(--accent)", s = 8 }: { c?: string; s?: number }) => (
   <svg width={s} height={s} viewBox="0 0 10 10"><path d="M5 0C5.4 3.2 6.8 4.6 10 5 6.8 5.4 5.4 6.8 5 10 4.6 6.8 3.2 5.4 0 5 3.2 4.6 4.6 3.2 5 0Z" fill={c} /></svg>
 );
 const Check = ({ s = 22 }: { s?: number }) => (
   <span className="tp-check" style={{ width: s, height: s }}>
-    <svg width={s * 0.5} height={s * 0.5} viewBox="0 0 12 12"><path d="M2 6.5 5 9l5-6" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" /></svg>
+    <svg width={s * 0.5} height={s * 0.5} viewBox="0 0 12 12"><path d="M2 6.5 5 9l5-6" stroke="var(--bg)" strokeWidth="2" fill="none" strokeLinecap="round" /></svg>
   </span>
 );
 const Label = ({ children }: { children: string }) => (
@@ -192,12 +193,12 @@ function Index() {
       </nav>
 
       <header className="tp-hero">
+        <div className="tp-hero-proof">Proven results, no guesswork</div>
         <h1 className="tp-h">
-          <span className="tp-h-line">Thumbnails</span>
-          <span className="tp-h-line">that get</span>
-          <span className="tp-h-line">Clicks</span>
+          <span className="tp-h-line"><em>3x</em> your</span>
+          <span className="tp-h-line">Click Rate</span>
         </h1>
-        <p className="tp-p">I don't just make pretty thumbnails, my thumbnails are well optimised to get clicked, which spark curiosity and urge the viewer to click on them</p>
+        <ClientCollage />
         <div className="tp-btns">
           <a href="#featured-work" className="tp-mono tp-primary">My Work</a>
           <a href="mailto:plexmediaa@gmail.com" className="tp-mono tp-secondary">Contact Me</a>
@@ -355,7 +356,7 @@ function Index() {
             <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
               <a href="#closing" className="tp-navbtn" style={{ position: "static" }}>Let's Work</a>
               <div>
-                <div style={{ color: "#FFC107", fontSize: 16 }}>★★★★★</div>
+                <div style={{ color: "var(--accent)", fontSize: 16 }}>★★★★★</div>
                 <div style={{ font: "500 14px Inter" }}>Trusted by [N]+ Creators</div>
               </div>
             </div>
@@ -369,7 +370,7 @@ function Index() {
             <div className="tp-t" style={{ marginBottom: 20 }}>Typical Designers</div>
             {["Generic templates", "Slow turnaround", "No strategy behind designs", "Limited revisions", "Poor communication"].map((x) => (
               <div className="tp-li" key={x} style={{ padding: "10px 0" }}>
-                <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="9" fill="#E5484D" /><path d="M6 6l6 6M12 6l-6 6" stroke="#fff" strokeWidth="1.8" /></svg>{x}
+                <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="9" fill="var(--text-muted)" /><path d="M6 6l6 6M12 6l-6 6" stroke="var(--bg)" strokeWidth="1.8" /></svg>{x}
               </div>
             ))}
           </div>
@@ -417,7 +418,7 @@ function Index() {
               <div className={`tp-q ${open === i ? "open" : ""}`} key={q}>
                 <button className="tp-qbtn" onClick={() => setOpen(open === i ? -1 : i)}>
                   {q}
-                  <svg className="tp-chev" width="16" height="16" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="#171717" strokeWidth="1.6" fill="none" /></svg>
+                  <svg className="tp-chev" width="16" height="16" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="var(--text-muted)" strokeWidth="1.6" fill="none" /></svg>
                 </button>
                 <div className="tp-ans"><div>{a}</div></div>
               </div>
@@ -429,10 +430,10 @@ function Index() {
       <section className="tp-wrap tp-sec" id="closing">
         <div className="tp-close">
           {[["CTR ↑", "-12deg", "10%", "8%", true], ["Fast delivery", "8deg", "14%", "78%", false], ["Bold design", "-6deg", "78%", "6%", false], ["More views", "10deg", "80%", "80%", true], ["Brand-ready", "-4deg", "46%", "4%", false]].map(([t, r, top, left, blue], i) => (
-            <span key={t as string} className="tp-float" style={{ top: top as string, left: left as string, rotate: r as string, animationDelay: `${i * 0.8}s`, background: blue ? "var(--blue)" : "#fff", color: blue ? "#fff" : "var(--ink)" }}>{t}</span>
+            <span key={t as string} className="tp-float" style={{ top: top as string, left: left as string, rotate: r as string, animationDelay: `${i * 0.8}s`, background: blue ? "var(--accent)" : "var(--bg-glow)", color: "var(--text)" }}>{t}</span>
           ))}
           <h2 className="tp-h">Ready To Get More Clicks?</h2>
-          <p className="tp-p" style={{ color: "#A0A0A0", maxWidth: 520, marginTop: 16 }}>Let's talk about your channel and design thumbnails your audience can't ignore.</p>
+          <p className="tp-p" style={{ color: "var(--text-muted)", maxWidth: 520, marginTop: 16 }}>Let's talk about your channel and design thumbnails your audience can't ignore.</p>
           <div className="tp-btns"><a href="#" className="tp-mono tp-primary" style={{ boxShadow: "inset 0 0 0 1px var(--blue-rim)" }}>Book a Call</a></div>
         </div>
       </section>
@@ -442,7 +443,7 @@ function Index() {
           <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 40 }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}><div className="tp-logo">sa</div><span style={{ font: "600 18px Inter" }}>Sohaib Athar</span></div>
-              <p style={{ fontSize: 14, color: "#A0A0A0", margin: "12px 0 20px" }}>Thumbnails that get clicked.</p>
+              <p style={{ fontSize: 14, color: "var(--text-muted)", margin: "12px 0 20px" }}>Thumbnails that get clicked.</p>
               <div style={{ display: "flex", gap: 10 }}>{["X", "Th", "Ig", "Yt"].map((s) => <a key={s} href="#" className="tp-soc" aria-label={s}>{s}</a>)}</div>
             </div>
             <div>
@@ -452,7 +453,7 @@ function Index() {
               ))}
             </div>
           </div>
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: 48, fontSize: 14, color: "#A0A0A0" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginTop: 48, fontSize: 14, color: "var(--text-muted)" }}>
             <span>© 2026 Sohaib Athar. All rights reserved.</span><span>Designed with care.</span>
           </div>
         </div>
