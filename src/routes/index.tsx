@@ -270,12 +270,30 @@ function Index() {
         <h2 className="tp-h">Real Results For Creators</h2>
         <p className="tp-p tp-sub">Thumbnails are the first impression. Here's what better ones can do for your channel.</p>
         <div className="tp-featured-grid">
-          {work.slice(0, 6).map((src, i) => (
-            <div className="tp-featured-card" key={`${src}-${i}`}>
+          {heroImageSet.slice(0, 6).map((src, i) => (
+            <article className="tp-featured-card" key={`${src}-${i}`}>
               <div className="tp-featured-inner">
-                <img src={src} alt="Featured thumbnail design" loading="lazy" />
+                <img src={src} alt={`${clients[i][1]} video thumbnail`} loading="eager" />
               </div>
-            </div>
+              <div className="tp-featured-meta">
+                <img
+                  className="tp-featured-avatar"
+                  src={clientImageUrl(clients[i][0])}
+                  alt=""
+                  loading="eager"
+                  onError={(event) => {
+                    const fallback = clientImg(clients[i][0]);
+                    if (fallback && event.currentTarget.src !== fallback) {
+                      event.currentTarget.src = fallback;
+                    }
+                  }}
+                />
+                <div className="tp-featured-channel">
+                  <div className="tp-featured-name">{clients[i][1]}</div>
+                  <div className="tp-featured-views">1M+ views</div>
+                </div>
+              </div>
+            </article>
           ))}
         </div>
       </section>
