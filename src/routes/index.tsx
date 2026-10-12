@@ -203,12 +203,11 @@ function Index() {
           <a href="#featured-work" className="tp-mono tp-primary">My Work</a>
           <a href="mailto:plexmediaa@gmail.com" className="tp-mono tp-secondary">Contact Me</a>
         </div>
+        <div className="tp-marquee">
+          <div className="tp-row">{[...rowA, ...rowA].map((src, i) => <div className="tp-frame" key={`row-a-${i}`}><Thumb src={src} alt={`Featured thumbnail ${i + 1}`} /></div>)}</div>
+          <div className="tp-row">{[...rowB, ...rowB].map((src, i) => <div className="tp-frame" key={`row-b-${i}`}><Thumb src={src} alt={`Featured thumbnail ${i + 1}`} /></div>)}</div>
+        </div>
       </header>
-
-      <div className="tp-marquee">
-        <div className="tp-row">{[...rowA, ...rowA].map((src, i) => <div className="tp-frame" key={`row-a-${i}`}><Thumb src={src} alt={`Featured thumbnail ${i + 1}`} /></div>)}</div>
-        <div className="tp-row">{[...rowB, ...rowB].map((src, i) => <div className="tp-frame" key={`row-b-${i}`}><Thumb src={src} alt={`Featured thumbnail ${i + 1}`} /></div>)}</div>
-      </div>
 
       <section className="tp-wrap" style={{ paddingTop: 60 }}>
         <Label>Clients</Label>

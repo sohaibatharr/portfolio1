@@ -197,7 +197,9 @@
   position: relative;
   overflow-x: hidden;
   isolation: isolate;
-  background: var(--bg-page);
+  background:
+    radial-gradient(ellipse at 50% 28%, color-mix(in srgb, var(--accent) 3%, transparent), transparent 58%),
+    var(--bg-page);
   color: var(--text-primary);
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-feature-settings: "cv11" 0, "ss03" 0;
@@ -464,7 +466,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: clamp(120px, 18vh, 160px) 20px 36px;
+  padding: clamp(120px, 18vh, 160px) 20px 0;
   text-align: center;
   background: radial-gradient(ellipse at 50% 40%, var(--bg-glow) 0%, var(--bg-mid) 45%, var(--bg) 85%);
 }
@@ -484,7 +486,18 @@
 }
 
 .tp-hero::after {
-  content: none;
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: auto 0 0;
+  height: clamp(140px, 22vh, 240px);
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in srgb, var(--bg-page) 72%, transparent) 48%,
+    var(--bg-page)
+  );
 }
 
 .tp-hero > * {
@@ -597,6 +610,10 @@
   mask-image: linear-gradient(to right, transparent 0, var(--text) 120px, var(--text) calc(100% - 120px), transparent 100%);
 }
 
+.tp-hero > .tp-marquee {
+  margin-top: 60px;
+}
+
 .tp-row {
   display: flex;
   gap: 30px;
@@ -673,10 +690,20 @@
 
 .tp-sec {
   position: relative;
+  isolation: isolate;
   z-index: 0;
   padding-top: 120px;
-  background-image: radial-gradient(ellipse at 50% 38%, var(--bg-page-haze), transparent 65%);
-  background-repeat: no-repeat;
+}
+
+.tp-sec::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 38%, var(--bg-page-haze), transparent 65%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, var(--text) 18%, var(--text) 82%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, var(--text) 18%, var(--text) 82%, transparent);
 }
 
 .tp-label {
@@ -1074,7 +1101,7 @@
   color: var(--text-primary);
   padding: 80px 0;
   margin-top: 120px;
-  border-top: 1px solid var(--border-hairline);
+  border-top: 0;
 }
 
 .tp-foot a {
@@ -1468,6 +1495,9 @@
 
 @media (max-width: 767px) {
   .tp-hero {
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: 110px 20px calc(env(safe-area-inset-bottom) + 24px);
     background: radial-gradient(ellipse 140% 78% at 50% 30%, var(--bg-glow) 0%, var(--bg-mid) 45%, var(--bg) 90%);
   }
 
@@ -1480,7 +1510,15 @@
   .tp-client-collage {
     --avatar-size: 44px;
     --avatar-overlap: 18px;
-    margin-top: 22px;
+    margin-top: 7px;
+  }
+
+  .tp-btns {
+    margin-top: 8px;
+  }
+
+  .tp-hero .tp-marquee {
+    margin-top: 34px;
   }
 }
 
